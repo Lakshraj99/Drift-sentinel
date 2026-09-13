@@ -1,5 +1,7 @@
 # DriftSentinel
 
+[![CI](https://github.com/Lakshraj99/DriftSentinel/actions/workflows/ci.yml/badge.svg)](https://github.com/Lakshraj99/DriftSentinel/actions/workflows/ci.yml)
+
 DriftSentinel is a university research prototype for predicting concept-drift
 onsets before a reactive detector fires. It learns from rolling stream and
 classifier-behaviour statistics, measures warnings under a strict five-batch
