@@ -1,0 +1,10 @@
+river==0.21.2
+numpy==1.26.4
+pandas==2.3.3
+scikit-learn==1.9.1
+torch==2.2.2
+matplotlib==3.11.2
+pyarrow==25.0.1
+PyYAML==6.0.3
+tqdm==4.70.1
+pytest==9.1.1

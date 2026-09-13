@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "driftsentinel"
+version = "0.2.0"
+description = "Sequence-model early warnings for concept drift"
+requires-python = ">=3.11,<3.14"
+dependencies = ["matplotlib>=3.8", "numpy>=1.24,<2", "pandas>=2.0", "pyarrow>=14", "pyyaml>=6", "river>=0.21,<0.22", "scikit-learn>=1.3", "torch>=2.2"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"

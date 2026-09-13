@@ -1,0 +1,13 @@
+dataset,split,rows,sequences,positive_targets,negative_targets,number_of_drift_events
+synth_sea_abrupt,train,356,347,30,317,6
+synth_sea_abrupt,validation,119,119,10,109,2
+synth_sea_abrupt,test,119,119,10,109,2
+synth_sea_gradual,train,356,347,30,317,6
+synth_sea_gradual,validation,119,119,10,109,2
+synth_sea_gradual,test,119,119,10,109,2
+insects_abrupt_balanced,train,577,568,10,558,2
+insects_abrupt_balanced,validation,158,158,5,153,1
+insects_abrupt_balanced,test,315,315,10,305,2
+elec2,train,495,486,0,486,0
+elec2,validation,135,135,0,135,0
+elec2,test,270,270,0,270,0

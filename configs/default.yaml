@@ -1,0 +1,60 @@
+seed: 42
+seeds: [11, 22, 33]
+phase1_reference_size: 300
+phase1_batch_size: 50
+sequence_length: 10
+lead_horizon: 5
+train_ratio: 0.55
+validation_ratio: 0.15
+batch_size: 32
+epochs: 35
+quick_epochs: 2
+patience: 6
+learning_rate: 0.001
+weight_decay: 0.0001
+hidden_dim: 48
+num_layers: 1
+dropout: 0.15
+logistic_c: 1.0
+logistic_max_iter: 1000
+threshold: 0.5
+cooldown: 5
+recovery_fraction: 0.95
+recovery_pre_window: 5
+retraining_window_instances: 300
+device: auto
+synthetic_sea:
+  event_instances: [3000, 6000, 9000, 12000, 15000, 18000, 21000, 24000, 27000, 29500]
+  concept_variants: [0, 2, 1, 3, 0, 2, 1, 3, 0, 2, 1]
+  concept_seed_base: 700
+  abrupt_transition_seed: 991
+  gradual_transition_seed: 992
+  gradual_width_instances: 500
+  max_instances: 30000
+datasets:
+  synth_sea_abrupt:
+    path: outputs/synth_sea_abrupt.csv
+    drift_onsets: [54, 114, 174, 234, 294, 354, 414, 474, 534, 584]
+    truth_quality: exact
+    train_ratio: 0.60
+    validation_ratio: 0.20
+  synth_sea_gradual:
+    path: outputs/synth_sea_gradual.csv
+    drift_onsets: [54, 114, 174, 234, 294, 354, 414, 474, 534, 584]
+    truth_quality: exact
+    train_ratio: 0.60
+    validation_ratio: 0.20
+  insects_abrupt_balanced:
+    path: outputs/insects_abrupt_balanced.csv
+    drift_onsets: [281, 384, 658, 767, 784]
+    truth_quality: published_instance_positions_mapped_to_batches
+    provenance:
+      source_url: https://raw.githubusercontent.com/durga256/OnlineLearning_ML/master/INSECTS-abrupt_balanced_norm.csv
+      sha256: e4819251b250a6fc1bf2a3798bbb7a1cbd2aff81d2ea34252a904c5266272fff
+      rows: 52848
+      features: 33
+      classes: 6
+  elec2:
+    path: outputs/elec2.csv
+    drift_onsets: []
+    truth_quality: unavailable
