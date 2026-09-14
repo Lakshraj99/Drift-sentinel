@@ -126,7 +126,7 @@ python scripts/run_pipeline.py reproduce
 See [Reproducibility](docs/REPRODUCIBILITY.md) for seeds, hyperparameters,
 dataset provenance, expected files, and clean-environment details. Presentation
 and oral-exam material are in [Presentation Guide](docs/PRESENTATION_GUIDE.md)
-and [Viva Q&A](docs/VIVA_QA.md).
+and [Viva Q&A](docs/VIVA_QA.md)
 
 ## Project structure
 
