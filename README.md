@@ -13,13 +13,27 @@ The faculty-ready Streamlit dashboard reads only the committed result artifacts;
 it does not train models, download datasets, or alter reported metrics at startup.
 
 ```bash
-streamlit run dashboard/app.py
+python -m pip install -r requirements.txt
+python -m pip install -e .
+python -m streamlit run dashboard/app.py
 ```
 
 Use the sidebar to move through the system overview, event timeline, seven-method
 comparison, threshold sensitivity, causal recovery replay, and research findings.
 See the [Dashboard Demo Guide](docs/DASHBOARD_DEMO.md) for a 3–5 minute talk track
 and an offline fallback.
+
+Use one interpreter consistently. To verify the active environment before
+launching, run:
+
+```bash
+python --version
+python -m streamlit version
+python -c "import sys, driftsentinel; print(sys.executable); print(driftsentinel.__file__)"
+```
+
+If the final command fails, the project has not been installed into the Python
+environment that is launching Streamlit; rerun `python -m pip install -e .`.
 
 ## Architecture
 

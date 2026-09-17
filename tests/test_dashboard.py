@@ -8,6 +8,7 @@ import pytest
 from dashboard.data_loader import (
     BASELINE_METHODS,
     DashboardDataError,
+    METHOD_LABELS,
     ROOT,
     _read_csv,
     comparison_view,
@@ -18,7 +19,6 @@ from dashboard.data_loader import (
     valid_timeline_datasets,
     validate_baseline_auc,
     warning_annotations,
-    METHOD_LABELS,
 )
 
 
@@ -105,9 +105,82 @@ def test_warning_episode_cannot_match_two_events():
     assert len(result["missed"]) == 1
 
 
-def test_streamlit_overview_smoke():
+def _open_section(section: str):
     testing = pytest.importorskip("streamlit.testing.v1")
-    app = testing.AppTest.from_file(str(ROOT / "dashboard/app.py"))
-    app.run(timeout=45)
+    app = testing.AppTest.from_file(str(ROOT / "dashboard/app.py")).run(timeout=45)
+    if section != "Overview":
+        app.sidebar.radio[0].set_value(section).run(timeout=45)
     assert not app.exception
-    assert app.title[0].value == "Predicting concept drift before it arrives"
+    return app
+
+
+@pytest.mark.parametrize(
+    ("section", "title", "charts", "tables"),
+    [
+        ("Overview", "Predicting concept drift before it arrives", 0, 1),
+        ("Drift Timeline", "Drift timeline explorer", 1, 0),
+        ("Model Comparison", "Model comparison", 1, 1),
+        ("Threshold Trade-off", "Threshold trade-off", 2, 0),
+        ("Recovery & Adaptation", "Recovery & adaptation", 2, 1),
+        ("Research Findings", "Research findings", 0, 0),
+    ],
+)
+def test_all_six_streamlit_sections(section, title, charts, tables):
+    app = _open_section(section)
+    assert not app.exception
+    assert app.title[0].value == title
+    assert len(app.get("plotly_chart")) >= charts
+    assert len(app.dataframe) >= tables
+
+
+def test_timeline_datasets_and_detector_modes_render_without_exceptions():
+    app = _open_section("Drift Timeline")
+    assert app.selectbox[0].value == "synth_sea_abrupt"
+    assert app.selectbox[1].value == "GRU"
+    assert app.selectbox[2].value == 11
+    assert len(app.get("plotly_chart")) == 1
+
+    for dataset in ("synth_sea_gradual", "insects_abrupt_balanced"):
+        app.selectbox[0].set_value(dataset).run(timeout=45)
+        assert not app.exception
+        assert app.selectbox[0].value == dataset
+        assert len(app.get("plotly_chart")) == 1
+
+    for detector in BASELINE_METHODS:
+        app.selectbox[1].set_value(detector).run(timeout=45)
+        assert not app.exception
+        assert app.selectbox[1].value == detector
+        assert app.selectbox[2].disabled
+        assert len(app.get("plotly_chart")) == 1
+
+    assert all("Elec2" not in label for label in app.selectbox[0].options)
+    assert any("Elec2 is intentionally absent" in caption.value for caption in app.caption)
+
+
+def test_model_comparison_per_dataset_and_baseline_na_rendering():
+    app = _open_section("Model Comparison")
+    macro = app.dataframe[0].value
+    baseline = macro[macro.Method.isin(BASELINE_METHODS)]
+    assert set(baseline["PR-AUC"]) == {"N/A"}
+
+    app.selectbox[0].set_value("Per dataset").run(timeout=45)
+    app.selectbox[1].set_value("synth_sea_abrupt").run(timeout=45)
+    assert not app.exception
+    per_dataset = app.dataframe[0].value
+    assert len(per_dataset) == 7
+    assert set(per_dataset[per_dataset.Method.isin(BASELINE_METHODS)]["PR-AUC"]) == {"N/A"}
+
+
+def test_recovery_tables_and_unavailable_event_metrics_render():
+    app = _open_section("Recovery & Adaptation")
+    assert len(app.get("plotly_chart")) == 2
+    summary = app.dataframe[0].value
+    assert {
+        "Method", "Recovery batches", "Recovery coverage", "Resets",
+        "False resets", "Event-related resets", "Adaptation precision",
+    }.issubset(summary.columns)
+    assert len(summary) == 7
+
+    event_rows = app.dataframe[1].value
+    assert event_rows["accuracy_recovery_batches"].isna().any()
+    assert event_rows["trigger_batch"].isna().any()

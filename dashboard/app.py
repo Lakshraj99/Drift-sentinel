@@ -1,23 +1,21 @@
 """DriftSentinel faculty presentation dashboard.
 
 Launch from the repository root:
-    streamlit run dashboard/app.py
+    python -m streamlit run dashboard/app.py
 """
 
 from __future__ import annotations
 
-from pathlib import Path
 import sys
+from pathlib import Path
 
 import streamlit as st
 
 ROOT = Path(__file__).resolve().parents[1]
-if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
 
-from dashboard.data_loader import DashboardDataError, load_dashboard_data  # noqa: E402
-from dashboard.pages import comparison, findings, overview, recovery, threshold, timeline  # noqa: E402
-from dashboard.styles import apply_styles  # noqa: E402
+from dashboard.data_loader import DashboardDataError, load_dashboard_data
+from dashboard.pages import comparison, findings, overview, recovery, threshold, timeline
+from dashboard.styles import apply_styles
 
 
 st.set_page_config(
@@ -27,6 +25,21 @@ st.set_page_config(
     initial_sidebar_state="auto",
 )
 apply_styles()
+
+try:
+    import driftsentinel  # noqa: F401
+except ModuleNotFoundError:
+    interpreter = sys.executable
+    st.error("The DriftSentinel project package is not installed in this Python environment.")
+    st.markdown(f"**Active interpreter:** `{interpreter}`")
+    st.markdown("From the repository root, install and launch with the same interpreter:")
+    st.code(
+        f'"{interpreter}" -m pip install -r requirements.txt\n'
+        f'"{interpreter}" -m pip install -e .\n'
+        f'"{interpreter}" -m streamlit run dashboard/app.py',
+        language="bash",
+    )
+    st.stop()
 
 try:
     data = load_dashboard_data(ROOT)

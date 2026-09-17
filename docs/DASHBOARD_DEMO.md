@@ -6,8 +6,21 @@ From the repository root, in the same environment used for the project:
 
 ```bash
 source .venv/bin/activate
-streamlit run dashboard/app.py
+python -m pip install -r requirements.txt
+python -m pip install -e .
+python -m streamlit run dashboard/app.py
 ```
+
+Confirm that Streamlit and DriftSentinel resolve through the same interpreter:
+
+```bash
+python --version
+python -m streamlit version
+python -c "import sys, driftsentinel; print(sys.executable); print(driftsentinel.__file__)"
+```
+
+If `driftsentinel` cannot be imported, install the project with
+`python -m pip install -e .` in that active environment before launching.
 
 The dashboard is offline-ready. Startup reads tracked CSV/YAML artifacts only;
 it does not download a dataset, retrain a model, select a new threshold, or

@@ -61,7 +61,7 @@ def render(data: DashboardData) -> None:
             "Dataset", "Split", "Rows", "Sequences", "Positive targets",
             "Negative targets", "Drift events",
         ]
-        st.dataframe(distribution, hide_index=True, width="stretch", height=430)
+        st.dataframe(distribution, hide_index=True, use_container_width=True, height=430)
     with right:
         st.subheader("What the results support")
         st.markdown(

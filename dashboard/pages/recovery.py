@@ -74,7 +74,7 @@ def render(data: DashboardData) -> None:
     })
     for column in table.columns[1:]:
         table[column] = table[column].map(lambda value: "N/A" if pd.isna(value) else f"{float(value):.4f}")
-    st.dataframe(table, hide_index=True, width="stretch")
+    st.dataframe(table, hide_index=True, use_container_width=True)
 
     info_panel(
         "At each deduplicated alert episode, replay resets a Hoeffding tree and warm-starts it with only the latest 300 already-labelled instances. It then resumes predict-before-learn. Recovery is the first five-batch rolling accuracy to reach 95% of the pre-drift baseline.",
@@ -89,4 +89,4 @@ def render(data: DashboardData) -> None:
             events = events[events.dataset == dataset]
         events["dataset"] = events.dataset.map(dataset_name)
         events["method"] = events.method.map(method_name)
-        st.dataframe(events, hide_index=True, width="stretch", height=360)
+        st.dataframe(events, hide_index=True, use_container_width=True, height=360)

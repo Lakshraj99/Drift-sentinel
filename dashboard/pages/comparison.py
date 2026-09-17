@@ -68,7 +68,7 @@ def render(data: DashboardData) -> None:
         fig.update_traces(hovertemplate="%{x}<br>%{customdata[0]}: %{y:.4f}<extra></extra>")
         st.plotly_chart(fig, use_container_width=True, config={"displaylogo": False})
 
-    st.dataframe(_format_table(frame), hide_index=True, width="stretch")
+    st.dataframe(_format_table(frame), hide_index=True, use_container_width=True)
     if view.startswith("Macro"):
         info_panel("Macro means average seeds within each dataset, then weight the three event-labelled datasets equally. They do not carry a ± because between-dataset variation is not seed variation.")
     elif view.startswith("Pooled"):
@@ -84,7 +84,11 @@ def render(data: DashboardData) -> None:
         seed_frame["Method"] = seed_frame.method.map(method_name)
         for label, stem in (("F1", "f1"), ("PR-AUC", "pr_auc"), ("Coverage", "detection_coverage"), ("Batch FAR", "batch_far")):
             seed_frame[label] = seed_frame.apply(lambda row: f"{row[f'{stem}_mean']:.4f} ± {row[f'{stem}_std']:.4f}", axis=1)
-        st.dataframe(seed_frame[["Dataset", "Method", "F1", "PR-AUC", "Coverage", "Batch FAR"]], hide_index=True, width="stretch")
+        st.dataframe(
+            seed_frame[["Dataset", "Method", "F1", "PR-AUC", "Coverage", "Batch FAR"]],
+            hide_index=True,
+            use_container_width=True,
+        )
         st.caption("Every ± is variability over seeds 11, 22, and 33 within one dataset—not variation across datasets.")
 
     info_panel("ADWIN, DDM, and KSWIN expose binary flags only. Their PR-AUC and ROC-AUC are N/A, not zero, and are excluded from area comparisons.", warning=True)
