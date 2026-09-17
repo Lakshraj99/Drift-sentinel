@@ -7,6 +7,20 @@ onsets before a reactive detector fires. It learns from rolling stream and
 classifier-behaviour statistics, measures warnings under a strict five-batch
 horizon, and replays raw streams to quantify both recovery and adaptation cost.
 
+## Interactive presentation dashboard
+
+The faculty-ready Streamlit dashboard reads only the committed result artifacts;
+it does not train models, download datasets, or alter reported metrics at startup.
+
+```bash
+streamlit run dashboard/app.py
+```
+
+Use the sidebar to move through the system overview, event timeline, seven-method
+comparison, threshold sensitivity, causal recovery replay, and research findings.
+See the [Dashboard Demo Guide](docs/DASHBOARD_DEMO.md) for a 3–5 minute talk track
+and an offline fallback.
+
 ## Architecture
 
 ```mermaid
@@ -141,6 +155,9 @@ src/driftsentinel/evaluation.py   classification, event, adaptation metrics
 src/driftsentinel/recovery.py     verified raw replay and real adaptation
 src/driftsentinel/pipeline.py     complete experiment orchestration
 src/driftsentinel/figures.py      final PNG/PDF figures
+dashboard/app.py                  interactive research presentation
+dashboard/data_loader.py          validated cached committed-result access
+dashboard/pages/                  six dashboard sections
 tests/                            regression and model tests
 results/metrics/                  detailed generated metrics
 results/tables/                   dataset, seed, macro, pooled summaries
